@@ -11,7 +11,7 @@ Usage example:
 Install:
 
 ```
-▶ go get github.com/Jinone/waybackurls
+▶ go get github.com/Jinone/waybackurl
 ```
 
 ## Credit
