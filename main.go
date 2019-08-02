@@ -2,10 +2,12 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -89,7 +91,10 @@ func main() {
 				fmt.Printf("%s %s\n", d.Format(time.RFC3339), w.url)
 
 			} else {
-				fmt.Println(w.url)
+				ctype := w.url[len(w.url)-3 : len(w.url)]
+				if ctype != "jpg" && ctype != "png" && ctype != "gif" {
+					fmt.Println(w.url, getHttpCode(w.url))
+				}
 			}
 		}
 	}
@@ -189,4 +194,13 @@ func isSubdomain(rawUrl, domain string) bool {
 	}
 
 	return strings.ToLower(u.Hostname()) != strings.ToLower(domain)
+}
+func getHttpCode(cUrl string) int{
+	_, cancel := context.WithTimeout(context.Background(), 3*time.Millisecond)
+	defer cancel()
+	resp, err := http.Get(cUrl)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return resp.StatusCode
 }
