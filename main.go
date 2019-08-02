@@ -186,7 +186,8 @@ func getCommonCrawlURLs(domain string, noSubs bool) ([]wurl, error) {
 }
 
 func isSubdomain(rawUrl, domain string) bool {
-	u, err := url.Parse(rawUrl)
+	qs := url.QueryEscape(rawUrl)
+	u, err := url.Parse(qs)
 	if err != nil {
 		// we can't parse the URL so just
 		// err on the side of including it in output
