@@ -198,9 +198,6 @@ func isSubdomain(rawUrl, domain string) bool {
 func getHttpCode(cUrl string) int{
 	_, cancel := context.WithTimeout(context.Background(), 3*time.Millisecond)
 	defer cancel()
-	resp, err := http.Get(cUrl)
-	if err != nil {
-		log.Fatal(err)
-	}
+	resp, _ := http.Get(cUrl)
 	return resp.StatusCode
 }
