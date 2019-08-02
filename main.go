@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -185,8 +186,7 @@ func getCommonCrawlURLs(domain string, noSubs bool) ([]wurl, error) {
 }
 
 func isSubdomain(rawUrl, domain string) bool {
-	qs := url.QueryEscape(rawUrl)
-	u, err := url.Parse(qs)
+	u, err := url.Parse(rawUrl)
 	if err != nil {
 		// we can't parse the URL so just
 		// err on the side of including it in output
@@ -196,8 +196,12 @@ func isSubdomain(rawUrl, domain string) bool {
 	return strings.ToLower(u.Hostname()) != strings.ToLower(domain)
 }
 func getHttpCode(cUrl string) int{
+	sURL := strings.Replace(cUrl,"%","%25", -1)
 	_, cancel := context.WithTimeout(context.Background(), 3*time.Millisecond)
 	defer cancel()
-	resp, _ := http.Get(cUrl)
+	resp, err := http.Get(sURL)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return resp.StatusCode
 }
