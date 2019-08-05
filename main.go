@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -11,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -92,7 +95,7 @@ func main() {
 
 			} else {
 				ctype := w.url[len(w.url)-3 : len(w.url)]
-				if ctype != "jpg" && ctype != "png" && ctype != "gif" {
+				if ctype != "jpg" && ctype != "png" && ctype != "gif" && !(DeDuplication(w.url)) {
 					fmt.Println(w.url, getHttpCode(w.url))
 				}
 			}
@@ -204,4 +207,49 @@ func getHttpCode(cUrl string) int{
 		log.Fatal(err)
 	}
 	return resp.StatusCode
+}
+type Data struct {
+	Host     string
+	Path     string
+	QueryKey []string
+	Hash     string
+}
+
+var ResultData []Data
+
+func HandleUri(uri string) Data {
+	u, err := url.Parse(uri)
+	data := Data{}
+	if err != nil {
+		return data
+	}
+	data.Host = u.Host
+	reg, _ := regexp.Compile(`(\d+)`)
+	data.Path = reg.ReplaceAllString(u.Path, "1")
+	hashString := data.Host + data.Path
+	for _, param := range strings.Split(u.RawQuery, "&") {
+		key := strings.Split(param, "=")[0]
+		data.QueryKey = append(data.QueryKey, key)
+		hashString += key
+	}
+	data.Hash = Md5(hashString)
+	return data
+}
+
+func Md5(content string) string {
+	h := md5.New()
+	h.Write([]byte(content))
+	cipherStr := h.Sum(nil)
+	return hex.EncodeToString(cipherStr)
+}
+
+func DeDuplication(uri string) bool {
+	data := HandleUri(uri)
+	for _, item := range ResultData {
+		if item.Hash == data.Hash {
+			return true
+		}
+	}
+	ResultData = append(ResultData, data)
+	return false
 }
