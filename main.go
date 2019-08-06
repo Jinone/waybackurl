@@ -1,22 +1,21 @@
 package main
 
 import (
-	"bufio"
-	"context"
-	"crypto/md5"
-	"encoding/hex"
-	"encoding/json"
-	"flag"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"net/url"
-	"os"
-	"regexp"
-	"strings"
-	"sync"
-	"time"
+"bufio"
+"context"
+"crypto/md5"
+"encoding/hex"
+"encoding/json"
+"flag"
+"fmt"
+"io/ioutil"
+"net/http"
+"net/url"
+"os"
+"regexp"
+"strings"
+"sync"
+"time"
 )
 
 func main() {
@@ -202,10 +201,7 @@ func getHttpCode(cUrl string) int{
 	sURL := strings.Replace(cUrl,"%","%25", -1)
 	_, cancel := context.WithTimeout(context.Background(), 3*time.Millisecond)
 	defer cancel()
-	resp, err := http.Get(sURL)
-	if err != nil {
-		log.Fatal(err)
-	}
+	resp, _ := http.Get(sURL)
 	return resp.StatusCode
 }
 type Data struct {
