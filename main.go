@@ -1,21 +1,20 @@
 package main
 
 import (
-"bufio"
-"context"
-"crypto/md5"
-"encoding/hex"
-"encoding/json"
-"flag"
-"fmt"
-"io/ioutil"
-"net/http"
-"net/url"
-"os"
-"regexp"
-"strings"
-"sync"
-"time"
+	"bufio"
+	"crypto/md5"
+	"encoding/hex"
+	"encoding/json"
+	"flag"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"os"
+	"regexp"
+	"strings"
+	"sync"
+	"time"
 )
 
 func main() {
@@ -93,9 +92,8 @@ func main() {
 				fmt.Printf("%s %s\n", d.Format(time.RFC3339), w.url)
 
 			} else {
-				ctype := w.url[len(w.url)-3 : len(w.url)]
-				if ctype != "jpg" && ctype != "png" && ctype != "gif" && !(DeDuplication(w.url)) {
-					fmt.Println(w.url, getHttpCode(w.url))
+				if !(DeDuplication(w.url)) {
+					fmt.Println(w.url)
 				}
 			}
 		}
@@ -197,13 +195,7 @@ func isSubdomain(rawUrl, domain string) bool {
 
 	return strings.ToLower(u.Hostname()) != strings.ToLower(domain)
 }
-func getHttpCode(cUrl string) int{
-	sURL := strings.Replace(cUrl,"%","%25", -1)
-	_, cancel := context.WithTimeout(context.Background(), 3*time.Millisecond)
-	defer cancel()
-	resp, _ := http.Get(sURL)
-	return resp.StatusCode
-}
+
 type Data struct {
 	Host     string
 	Path     string
