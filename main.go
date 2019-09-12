@@ -92,9 +92,9 @@ func main() {
 				fmt.Printf("%s %s\n", d.Format(time.RFC3339), w.url)
 
 			} else {
-				if !(DeDuplication(w.url)) {
+				ctype := w.url[len(w.url)-3 : len(w.url)]
+				if ctype != "css" && ctype != "jpg" && ctype != "png" && ctype != "gif" && !(DeDuplication(w.url)) {
 					fmt.Println(w.url)
-				}
 			}
 		}
 	}
