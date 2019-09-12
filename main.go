@@ -93,7 +93,7 @@ func main() {
 
 			} else {
 				ctype := w.url[len(w.url)-3 : len(w.url)]
-				if ctype != "css" && ctype != "jpg" && ctype != "png" && ctype != "gif" && !(DeDuplication(w.url)) {
+				if ctype != "svg" && ctype != "css" && ctype != "jpg" && ctype != "png" && ctype != "gif" && !(DeDuplication(w.url)) {
 					fmt.Println(w.url)
 			}
 		}
