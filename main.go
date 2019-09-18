@@ -1,20 +1,20 @@
 package main
 
 import (
-	"bufio"
-	"crypto/md5"
-	"encoding/hex"
-	"encoding/json"
-	"flag"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/url"
-	"os"
-	"regexp"
-	"strings"
-	"sync"
-	"time"
+"bufio"
+"crypto/md5"
+"encoding/hex"
+"encoding/json"
+"flag"
+"fmt"
+"io/ioutil"
+"net/http"
+"net/url"
+"os"
+"regexp"
+"strings"
+"sync"
+"time"
 )
 
 func main() {
@@ -92,8 +92,7 @@ func main() {
 				fmt.Printf("%s %s\n", d.Format(time.RFC3339), w.url)
 
 			} else {
-				ctype := w.url[len(w.url)-3 : ]
-				if ctype != "svg" && ctype != "css" && ctype != "jpg" && ctype != "png" && ctype != "gif" && !(DeDuplication(w.url)) {
+				if !(strings.HasSuffix(w.url,".jpg")) && !(strings.HasSuffix(w.url,".css")) && !(strings.HasSuffix(w.url,".svg")) && !(strings.HasSuffix(w.url,".png")) && !(strings.HasSuffix(w.url,".gif")) && !(DeDuplication(w.url)) {
 					fmt.Println(w.url)
 				}
 			}
